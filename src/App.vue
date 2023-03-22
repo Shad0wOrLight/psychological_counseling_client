@@ -1,30 +1,23 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div class="app">
+    <router-view />
+    <!-- 底部导航栏 -->
+    <TabBar v-if="route.meta.showTabBar" />
+  </div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script setup>
+import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
+import TabBar from "./components/tab-bar/tab-bar.vue";
+import useUserStore from "./stores/modules/user";
+import { init } from "./utils/websocket";
+const route = useRoute();
+const { userInfo } = storeToRefs(useUserStore());
 
-nav {
-  padding: 30px;
+if (userInfo) {
+  init(userInfo.value.uid);
 }
+</script>
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+<style lang="less" scoped></style>
